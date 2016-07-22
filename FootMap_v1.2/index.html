@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>XXJ</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="./reset.css">
+	<link rel="stylesheet" href="./footmap.css">
+	<style type="text/css">
+	.new_txt .add:hover{
+		background: #6E6E6E;
+		color: white;
+		border:2px solid white; 
+		border-radius: 3px;
+	}
+	#main .unfold_sp:hover{
+		border:1px solid white;
+		margin-top: -1px;
+	}
+	#main .fold_sp:hover{
+		background: #D6D6D6;
+	}
+
+	</style>
+	<script src="ajax.js"></script>
+	<script src="footmap.js"></script>
+	<script src="jquery-3.0.0.js"></script>
+	<script type="text/javascript">
+//向地图上添加圆点函数
+	function addDot(cityX,cityY,flag){//flag：1 计划城市 0 以走过的城市
+		var oNew=document.getElementById('new');
+		var newLink=document.createElement('a');
+		var newDot=document.createElement('div');
+		var oMap=getByClass(oNew,'map')[0];		
+		newLink.herf='javascript:;';
+		newDot.className='dot';
+		if (flag) {
+			newDot.style.background='#436EEE';
+		}
+		else{
+			newDot.style.background='#EE2C2C';
+		}
+		
+		newDot.style.left=cityX+'px';
+		newDot.style.top=cityY+'px';
+		newLink.appendChild(newDot);
+		oMap.appendChild(newLink);
+		
+		
+}
+	window.onload=function(){
+		var oNew=document.getElementById('new');
+		var oShow=document.getElementById('show');
+		var oAdd=getByClass(oNew,'add')[0];
+		var oAddCity=document.getElementById('add_city');
+		var oAddTxt=document.getElementById('add_txt');
+		var oPlan=document.getElementById('plan');
+		var oPlanCity=document.getElementById('plan_city');
+		var oPlanTxt=document.getElementById('plan_txt'); 
+
+		var TEXHEIGHT=172;
+		
+//添加足迹事件
+
+		oAdd.onclick=function(){
+			//判断用户是否输入文字
+			if (rgb2hex(getStyle(oAddTxt,'color'))=='#A3A3A3'|| rgb2hex(getStyle(oAddCity,'color'))=='#A3A3A3') {
+				alert('Please input city or words!');
+			}
+			else{
+				
+				//在地图上添加红色点
+				ajax('cityXY.txt?='+new Date().getTime(),function(str){
+					var json=eval('('+str+')');
+					if (json[oAddCity.value]) {
+						addDot(json[oAddCity.value][0],json[oAddCity.value][1],0);
+					
+						//在内容区添加内容
+						var newUl=document.createElement('ul');
+						var newPic=document.createElement('li');
+						var newTitle=document.createElement('li');
+						var newTxt=document.createElement('li');
+						var newDivTxt=document.createElement('div');
+						
+						var aUl=oShow.getElementsByTagName('ul');
+
+						newUl.className='content';
+						newPic.className='pic';
+						newTitle.className='title text';
+						newTxt.className='text';
+						newDivTxt.className='txt';
+						
+
+						newPic.innerHTML='<a href="javascript:;"><img src="./img_city/'+oAddCity.value+'.png" alt="" /></a>'
+						newTitle.innerHTML='<span class="city" >'+oAddCity.value+'</span>';
+
+						newDivTxt.innerHTML=oAddTxt.value;
+
+						newTxt.appendChild(newDivTxt);
+						newUl.appendChild(newPic);
+						newUl.appendChild(newTitle);
+						newUl.appendChild(newTxt);
+						oShow.insertBefore(newUl,aUl[0]);
+						//判断文本高度
+						
+						
+						
+						if (parseInt(getStyle(newDivTxt,'height'))>TEXHEIGHT) {
+							var newSpan=document.createElement('span');
+							newSpan.innerHTML='&nbsp;&lt;&lt;&nbsp;';
+							newSpan.className='fold_sp';
+							newTxt.appendChild(newSpan);
+							newTitle.innerHTML='<span class="city" >'+oAddCity.value+'<span class="unfold_sp">&gt;&gt;&nbsp;&nbsp;</span></span>';
+							
+							newDivTxt.className='txt unfold';
+							
+					
+						}
+						else{
+							newDivTxt.className='txt';
+						}
+				 	}
+				 	else{
+				 		alert('Please input correct city name!');
+				 	}
+					
+				});
+				
+			}
+			
+
+		};
+//添加计划事件
+		oPlan.onclick=function(){
+			//判断用户是否输入文字
+			if (rgb2hex(getStyle(oPlanTxt,'color'))=='#A3A3A3'|| rgb2hex(getStyle(oPlanCity,'color'))=='#A3A3A3') {
+				alert('Please input city or words!');
+			}
+			else{
+				
+				//在地图上添加蓝色点  应该有个遍历过程
+				ajax('cityXY.txt?='+new Date().getTime(),function(str){
+					var json=eval('('+str+')');
+					if (json[oPlanCity.value]) {
+						addDot(json[oPlanCity.value][0],json[oPlanCity.value][1],1);
+						oPlanTxt.disabled='disabled';
+					}
+					else{
+						alert('Please input correct city name!');
+					}
+				});
+			}
+		};
+
+	};
+
+
+	$(document).ready(function(){
+//文本框获取与失去焦点事件
+		$(':input').focus(function(){
+			if (rgb2hex($(this).css('color'))!='#000000') {
+				$(this).css('color','black').val('').html('');
+			}
+			
+		});
+		$(':input').blur(function(){
+			if ($(this).val()=='') {
+				$(this).css('color','#A3A3A3');
+				if ($(this).attr('id')=='add_city') {
+					$(this).val('你的城市......');	
+				}
+				else if ($(this).attr('id')=='add_txt'){
+					$(this).val('    用脚丈量世界，用文字回忆所见......');
+				}
+				else if ($(this).attr('id')=='plan_city') {
+					$(this).val('你的计划城市......');
+				}
+				else{
+					$(this).val('    与盯着足图看，不如说走就走......');
+				}
+			}
+			
+		});
+
+//显示区域文本的展开与收起效果
+		$('#show').on('click','.unfold_sp',function(){
+
+			$(this).parent().parent().next().children(':first-child').removeClass('unfold').addClass('fold').next().css('display','block');
+			$(this).css('display','none');
+		});
+
+		$('#show').on('click','.fold_sp',function(){
+			$(this).parent().prev().find('.unfold_sp').css('display','block');
+			$(this).css('display','none').prev().removeClass('fold').addClass('unfold');
+			
+		});
+		
+	});
+
+	</script>
+</head>
+<body >
+	<div id="header">
+		<div class="nav">
+			<div class="logo" >
+				足图
+				<br>
+				FootMap
+			</div>
+			<div class="sublogo" >
+				<p>远方除了遥远，一无所有</p>
+				<p>但我还是想去看看</p>
+			</div>
+		</div>
+	</div>
+	<div id="main" >
+		<div id="new" class="new">
+			<div class="map" >
+				<a href="javascript:;"><div class="dot visited" ></div></a>
+				<a href="javascript:;"><div class="dot unvisited"></div></a>
+				<img src="./img/map2.jpg" alt="" />
+			</div>
+			
+			<div id="new_bl" class="new_txt">
+				<div class="add" >添加足迹</div>
+				<input id="add_city" type="text" value="你的城市......" >
+				
+				<br>
+				<textarea id="add_txt" cols="55" rows="15" >    用脚丈量世界，用文字回忆所见......</textarea>
+				
+			</div>
+			<div class="clr" ></div>	
+		</div>
+		<div  id="show" class="show">
+			<ul class="content" >
+				<li class="pic" ><a href="javascript:;"><img src="./img_city/北京.png" alt="" /></a></li>
+			 	<li class="title text" ><span class="city" >北京<span class="unfold_sp">&gt;&gt;&nbsp;&nbsp;</span></span></li>
+			 	<li class="text" >
+					<div class="txt unfold" >
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;北京（Beijing），简称京，中华人民共和国首都、直辖市、国家中心城市、超大城市，全国政治中心、文化中心、国际交往中心、科技创新中心，是中国共产党中央委员会、中华人民共和国中央人民政府和全国人民代表大会的办公所在地。<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;北京位于华北平原北部，背靠燕山，毗邻天津市和河北省。北京的气候为典型的北温带半湿润大陆性季风气候。<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;北京是首批国家历史文化名城和世界上拥有世界文化遗产数最多的城市，三千多年的历史孕育了故宫、天坛、八达岭长城、颐和园等众多名胜古迹。早在七十万年前，北京周口店地区就出现了原始人群部落“北京人”。公元前1045年，北京成为蓟、燕等诸侯国的都城。公元938年以来，北京先后成为辽陪都、金中都、元大都、明清国都。1949年10月1日成为中华人民共和国首都。<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年末，北京全市常住人口2170.5万人，比2014年末增加18.9万人。其中，常住外来人口822.6万人，占常住人口的比重为37.9%。2015年北京市实现地区生产总值22968.6亿元，比2014年增长6.9%。
+					</div>
+					<span class="fold_sp">&nbsp;&lt;&lt;&nbsp;</span>
+				</li>
+			</ul>
+			<ul class="content" >
+				<li class="pic" ><a href="javascript:;"><img src="./img_city/上海.png"></li></a>
+			 	<li class="title text" ><span class="city" >上海</span></li>
+			 	<li class="text" >
+					<div class="txt" >
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上海，简称“沪”或“申”，中华人民共和国直辖市，国家中心城市，超大城市，中国的经济、金融、贸易、航运中心，首批沿海开放城市。地处长江入海口，隔东中国海与日本九州岛相望，南濒杭州湾，西与江苏、浙江两省相接。上海是一座国家历史文化名城，拥有深厚的近代城市文化底蕴和众多历史古迹。江南传统吴越文化与西方传入的工业文化相融合形成上海特有的海派文化，[4]  上海人多属江浙民系使用吴语。[5]  早在宋代就有了“上海”之名，1843年后上海成为对外开放的商埠并迅速发展成为远东第一大城市，今日的上海已经成功举办了2010年世界博览会、中国上海国际艺术节、上海国际电影节等大型国际活动。
+					</div>
+				</li>
+			</ul>
+			<ul class="content" >
+				<li class="pic" ><a href="javascript:;"><img src="./img_city/重庆.png"></li></a>
+			 	<li class="title text" ><span class="city" >重庆</span></li>
+			 	<li class="text" > 
+					<div class="txt" >
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重庆，简称巴和渝，别称巴渝、山城、渝都、桥都，雾都，是中华人民共和国中央直辖市、特大城市，[1-2]  国家中心城市[3]  ，长江上游地区经济中心、金融中心和创新中心，政治、文化、科技、教育、艺术等中心，国务院定位的国际大都市，国家重要的水、陆、空型综合交通枢纽。西南地区最大的工商业中心城市。是国家实施西部大开发和长江经济带西部地区的核心增长极。
+					</div>
+				</li>
+			</ul>
+		
+		</div>
+		<div id="new_plan" class="new_txt">
+				<div  id="plan" class="add" >添加计划</div>
+				<input id="plan_city" type="text" value="你的计划城市......" >
+				
+				<br>
+				<textarea id="plan_txt" cols="47" rows="20" >    与盯着足图看，不如说走就走......</textarea>				
+		</div>		
+	</div>
+	<div class="clr" ></div>
+	<div id="footer">
+		<span>© 2016 challin_xu@163.com, all rights reserved vanillaXu</span>
+	</div>
+
+
+</body>
+</html>
