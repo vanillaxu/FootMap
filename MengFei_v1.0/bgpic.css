@@ -1,0 +1,157 @@
+@charset "utf-8";
+
+body{
+	background: url('./img/bg.png');
+	font-family: "Microsoft YaHei", Arial, sans-serif;
+	
+}
+#container{	
+	min-width: 960px;
+}
+#subheader{
+	height: 180px;
+	position: relative;
+}
+#subheader img{
+	position: absolute;
+	top:40px;
+	right: 120px;
+}
+#header_list{
+	height: 40px;
+	background: #fff;
+	position: relative;
+	border:1px solid #999999;
+	box-shadow:0px 1px 20px #4a4a4a;
+	z-index: 1;
+}
+#header_list li{
+	width: 100px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	background: #fff;
+	top: -15px;
+	border-radius: 3px;
+	display: inline-block;
+	margin-right: 50px;
+	border:1px solid #999999;
+	font-size: 18px;
+	position: relative;
+	left: 10%;
+	box-shadow:0px 1px 10px #4a4a4a;
+}
+a{
+	color: #555;
+}
+#main{
+	background: #EEEEE0;	
+}
+#main_top{
+	height: 300px;
+	width: 960px;	
+	border-bottom:1px solid #999999;
+	position: relative;
+	margin: 0 auto;
+	
+}
+#main_top .content{
+	position: absolute;
+	margin-top: 40px;
+	color: #555;
+	
+}
+#main_top .text{
+	z-index: 1;
+	position: absolute;
+	top: 30px;
+	left: 50px;
+}
+#main_top .text h1{	
+	font-size: 35px;
+	margin-bottom: 20px;
+	position: relative;
+}
+#main_top .text p{
+	font-size: 16px;
+	margin-top: 8px;
+
+}
+#main_top ul{
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
+}
+
+#main_top li{
+	width: 80px;
+	height: 25px;
+	text-align: center;
+	line-height: 25px;
+	background: #fff;
+	display: inline-block;
+	position: relative;
+	font-size: 16px;
+	background: #EEEEE0;
+}
+
+#main_bottom{
+	height: 300px;
+	width: 960px;
+	position: relative;
+	margin: 0 auto;
+
+}
+#main_bottom .pic_show{
+	height: 270px;
+	width: 270px;
+	float: left;
+	background: #fff;
+	position: relative;
+	margin-top:20px;
+	margin-right: 45px;
+	border-radius: 50%;
+	text-align: center;
+	overflow: hidden;
+	box-shadow: 1px 3px 15px #CDC9C9 inset;
+	border:1px solid #E8E8E8;
+}
+#main_bottom .pic_show img{
+	position:relative;
+	padding-top: 15px;
+}
+#footer{
+	height: 180px;
+	position: relative;
+
+}
+#footer_content{
+	width: 200px;
+	height: 100px;
+
+	color: black;
+	font-size: 12px;
+	position: absolute;
+	right: 100px;
+	top: 40px;
+}
+#footer_content ul{
+	position:absolute;
+	right: 0;
+	top: 10px;
+}
+#footer_content li{
+
+	display: inline-block;
+	margin-left: 5px;
+}
+#footer_content a{
+	color: black;
+}
+#footer_content p{
+	position: relative;
+	text-align: right;
+	top: 30px;
+
+}
+
