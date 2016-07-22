@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>XXJ</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<style type="text/css">
+	#div{
+		height: 100px;
+		width: 100px;
+		border:1px solid black;
+	
+	}
+	input{
+		display: none;
+	}
+	</style>
+	<script src="footmap.js"></script>
+	<script src="data_city.js"></script>
+	<script src="jquery-3.0.0.js"></script>
+	<script type="text/javascript">
+		window.onload=function() {
+			var oDiv=document.getElementById('div');
+			var oBtn=document.getElementById('btn');
+			
+			if (parseInt(getStyle(oDiv,'height'))<200) {
+				
+				oBtn.style.display='inline';
+			}
+			
+		};
+		$(document).ready(function(){
+			
+
+			
+		});
+			
+		
+		
+
+	</script>
+</head>
+<body >
+	<input id="btn" type="button" value="button" >
+	<div id="div" >aaa</div>
+	
+</body>
+</html>
